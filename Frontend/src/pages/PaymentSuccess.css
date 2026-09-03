@@ -1,0 +1,624 @@
+/* ============================================================
+   DESIGN SYSTEM & CSS VARIABLES
+   ============================================================ */
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-glow: rgba(37, 99, 235, 0.15);
+  --accent: #6366f1;
+
+  --bg-main: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f1f5f9;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  --border: #e2e8f0;
+  --border-focus: #93c5fd;
+
+  --success: #16a34a;
+  --success-hover: #15803d;
+  --success-bg: #f0fdf4;
+  --success-border: #bbf7d0;
+  --success-glow: rgba(22, 163, 74, 0.15);
+
+  --danger: #dc2626;
+  --danger-bg: #fef2f2;
+  --danger-border: #fecaca;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-card:
+    0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   PAGE LAYOUT & WRAPPER
+   ============================================================ */
+.payment-success-page {
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  background-image:
+    radial-gradient(
+      circle at 15% 15%,
+      rgba(22, 163, 74, 0.06) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 85% 85%,
+      rgba(37, 99, 235, 0.06) 0%,
+      transparent 40%
+    );
+  color: var(--text-primary);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  padding: 3rem 1.5rem 5rem;
+  box-sizing: border-box;
+}
+
+.payment-success-container {
+  max-width: 780px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   SUCCESS HERO SECTION
+   ============================================================ */
+.payment-success-hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.payment-success-check {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 10px 25px -5px rgba(22, 163, 74, 0.35);
+  animation: scalePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes scalePop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.payment-success-eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--success);
+  background: var(--success-glow);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 0.75rem;
+}
+
+.payment-success-hero h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+  margin: 0 0 0.75rem;
+  line-height: 1.2;
+}
+
+.payment-success-hero p {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-width: 520px;
+  margin: 0 auto 1.5rem;
+}
+
+.payment-success-order-number {
+  display: inline-block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================================
+   ORDER SUMMARY CARD
+   ============================================================ */
+.payment-success-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 1.75rem;
+}
+
+.payment-success-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.payment-success-card-header span {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.payment-success-card-header h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin: 0.25rem 0 0;
+  letter-spacing: -0.02em;
+}
+
+.payment-success-paid {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+.payment-success-paid-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--success);
+  border-radius: 50%;
+}
+
+/* ============================================================
+   ORDER ITEMS LIST
+   ============================================================ */
+.payment-success-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.payment-success-empty {
+  text-align: center;
+  padding: 2rem 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.payment-success-item {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.payment-success-item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.payment-success-item-image {
+  width: 64px;
+  height: 64px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.payment-success-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.35rem;
+  box-sizing: border-box;
+}
+
+.payment-success-item-image span {
+  color: var(--text-muted);
+  font-size: 1.25rem;
+}
+
+.payment-success-item-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.payment-success-item-info strong {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+.payment-success-item-info small {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.payment-success-item-info span {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.payment-success-item-info em {
+  font-style: normal;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  display: inline-block;
+  width: fit-content;
+  margin-top: 0.2rem;
+}
+
+.payment-success-item-price {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+
+.payment-success-item-price strong {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.payment-success-item-price span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   PRICE SUMMARY
+   ============================================================ */
+.payment-success-summary {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.payment-success-summary > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.payment-success-summary > div strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.payment-success-summary .payment-success-total {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border);
+  font-size: 1.15rem;
+}
+
+.payment-success-summary .payment-success-total span {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.payment-success-summary .payment-success-total strong {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   METADATA DETAILS GRID
+   ============================================================ */
+.payment-success-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.payment-success-info-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.payment-success-info-card span {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.payment-success-info-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0.4rem 0 0.35rem;
+  letter-spacing: -0.01em;
+}
+
+.payment-success-info-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+/* ============================================================
+   PAYMENT GATEWAY INFO
+   ============================================================ */
+.payment-success-payment-info {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-around;
+  gap: 1.5rem;
+  margin-bottom: 2.25rem;
+  flex-wrap: wrap;
+}
+
+.payment-success-payment-info > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.payment-success-payment-info span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.payment-success-payment-info strong {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   ACTION BUTTONS
+   ============================================================ */
+.payment-success-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.payment-success-primary,
+.payment-success-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.payment-success-primary {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+  border: 1px solid var(--primary);
+}
+
+.payment-success-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+}
+
+.payment-success-secondary {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.payment-success-secondary:hover {
+  background: var(--bg-subtle);
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+}
+
+.payment-success-footer {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ============================================================
+   LOADING & ERROR STATES
+   ============================================================ */
+.payment-success-state {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  max-width: 480px;
+  margin: 4rem auto 0;
+  box-shadow: var(--shadow-card);
+}
+
+.payment-success-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1.25rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.payment-success-state h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.payment-success-icon {
+  width: 52px;
+  height: 52px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin: 0 auto 1.25rem;
+}
+
+.payment-success-state h1 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+}
+
+.payment-success-state p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0 0 1.75rem;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   RESPONSIVE MEDIA QUERIES
+   ============================================================ */
+
+/* Tablets (max-width: 768px) */
+@media (max-width: 768px) {
+  .payment-success-page {
+    padding: 2rem 1rem 3.5rem;
+  }
+
+  .payment-success-details {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .payment-success-card {
+    padding: 1.5rem;
+  }
+
+  .payment-success-hero h1 {
+    font-size: 1.75rem;
+  }
+
+  .payment-success-payment-info {
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+}
+
+/* Mobile Devices (max-width: 480px) */
+@media (max-width: 480px) {
+  .payment-success-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .payment-success-primary,
+  .payment-success-secondary {
+    width: 100%;
+  }
+
+  .payment-success-item {
+    align-items: flex-start;
+  }
+
+  .payment-success-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}

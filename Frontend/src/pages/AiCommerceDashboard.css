@@ -1,0 +1,612 @@
+/* ============================================================
+   AI REVENUE CLICKABLE ROW
+   ============================================================ */
+
+.ai-revenue-row-clickable {
+  width: 100%;
+
+  border: none;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  font: inherit;
+
+  color: inherit;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.ai-revenue-row-clickable:hover {
+  transform: translateY(-1px);
+
+  border-color: var(--primary);
+
+  box-shadow: var(--shadow-card);
+}
+
+.ai-revenue-row-clickable:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.18);
+
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   VIEW BUTTON
+   ============================================================ */
+
+.ai-revenue-view {
+  flex-shrink: 0;
+
+  color: var(--primary);
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+/* ============================================================
+   MODAL OVERLAY
+   ============================================================ */
+
+.ai-revenue-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(15, 23, 42, 0.48);
+
+  backdrop-filter: blur(4px);
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+
+.ai-revenue-modal {
+  width: min(620px, 100%);
+
+  max-height: calc(100vh - 48px);
+
+  overflow-y: auto;
+
+  background: var(--bg-surface);
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.22);
+
+  padding: 24px;
+
+  animation: aiRevenueModalIn 0.18s ease-out;
+}
+
+@keyframes aiRevenueModalIn {
+  from {
+    opacity: 0;
+
+    transform: translateY(10px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ============================================================
+   MODAL HEADER
+   ============================================================ */
+
+.ai-revenue-modal-header {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 22px;
+}
+
+.ai-revenue-modal-label {
+  color: var(--primary);
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+
+  margin-bottom: 5px;
+}
+
+.ai-revenue-modal-header h2 {
+  margin: 0;
+
+  color: var(--text-primary);
+
+  font-size: 24px;
+
+  line-height: 1.2;
+
+  font-weight: 800;
+}
+
+/* ============================================================
+   CLOSE
+   ============================================================ */
+
+.ai-revenue-modal-close {
+  width: 36px;
+
+  height: 36px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 1px solid var(--border);
+
+  border-radius: 9px;
+
+  background: var(--bg-surface);
+
+  color: var(--text-secondary);
+
+  font-size: 24px;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.ai-revenue-modal-close:hover {
+  background: var(--bg-muted);
+
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   PRODUCT
+   ============================================================ */
+
+.ai-revenue-modal-product {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 16px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 12px;
+
+  background: var(--bg-muted);
+
+  margin-bottom: 14px;
+}
+
+.ai-revenue-modal-product-icon {
+  width: 46px;
+
+  height: 46px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: var(--primary);
+
+  color: #ffffff;
+
+  font-size: 12px;
+
+  font-weight: 900;
+}
+
+.ai-revenue-modal-product strong {
+  display: block;
+
+  color: var(--text-primary);
+
+  font-size: 15px;
+
+  font-weight: 800;
+}
+
+.ai-revenue-modal-product span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: var(--text-secondary);
+
+  font-size: 12px;
+}
+
+/* ============================================================
+   AMOUNT
+   ============================================================ */
+
+.ai-revenue-modal-amount {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 18px 0;
+
+  border-bottom: 1px solid var(--border);
+
+  margin-bottom: 18px;
+}
+
+.ai-revenue-modal-amount span {
+  color: var(--text-secondary);
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+.ai-revenue-modal-amount strong {
+  color: var(--text-primary);
+
+  font-size: 24px;
+
+  font-weight: 900;
+}
+
+/* ============================================================
+   DETAIL GRID
+   ============================================================ */
+
+.ai-revenue-detail-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-bottom: 20px;
+}
+
+.ai-revenue-detail-item {
+  padding: 13px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 10px;
+
+  background: var(--bg-surface);
+}
+
+.ai-revenue-detail-item span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.04em;
+
+  text-transform: uppercase;
+}
+
+.ai-revenue-detail-item strong {
+  display: block;
+
+  color: var(--text-primary);
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  overflow-wrap: anywhere;
+}
+
+.ai-revenue-detail-wide {
+  grid-column: 1 / -1;
+}
+
+.ai-revenue-status {
+  color: var(--primary) !important;
+
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   ATTRIBUTION
+   ============================================================ */
+
+.ai-revenue-attribution {
+  padding: 16px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 12px;
+
+  background: var(--bg-muted);
+
+  margin-bottom: 20px;
+}
+
+.ai-revenue-attribution-title {
+  margin-bottom: 13px;
+
+  color: var(--text-primary);
+
+  font-size: 12px;
+
+  font-weight: 900;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.05em;
+}
+
+.ai-attribution-item {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  padding: 9px 0;
+}
+
+.ai-attribution-item + .ai-attribution-item {
+  border-top: 1px solid var(--border);
+}
+
+.ai-attribution-check {
+  width: 22px;
+
+  height: 22px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: var(--primary);
+
+  color: #ffffff;
+
+  font-size: 12px;
+
+  font-weight: 900;
+}
+
+.ai-attribution-item strong {
+  display: block;
+
+  color: var(--text-primary);
+
+  font-size: 12px;
+
+  font-weight: 800;
+}
+
+.ai-attribution-item small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: var(--text-secondary);
+
+  font-size: 11px;
+}
+
+/* ============================================================
+   MODAL FOOTER BUTTON
+   ============================================================ */
+
+.ai-revenue-modal-footer-button {
+  width: 100%;
+
+  min-height: 44px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: var(--primary);
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.ai-revenue-modal-footer-button:hover {
+  transform: translateY(-1px);
+
+  opacity: 0.92;
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .ai-revenue-modal-overlay {
+    padding: 12px;
+  }
+
+  .ai-revenue-modal {
+    max-height: calc(100vh - 24px);
+
+    padding: 18px;
+
+    border-radius: 14px;
+  }
+
+  .ai-revenue-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-revenue-detail-wide {
+    grid-column: auto;
+  }
+
+  .ai-revenue-modal-amount {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 6px;
+  }
+
+  .ai-revenue-view {
+    display: none;
+  }
+}
+/* ============================================================
+   ORDER LINK
+   ============================================================ */
+
+.ai-order-link {
+  flex-shrink: 0;
+
+  border: 1px solid var(--border);
+
+  border-radius: 8px;
+
+  padding: 8px 12px;
+
+  background: var(--bg-surface);
+
+  color: var(--primary);
+
+  cursor: pointer;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.ai-order-link:hover {
+  background: var(--bg-muted);
+
+  border-color: var(--primary);
+
+  transform: translateY(-1px);
+}
+
+.ai-order-link:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.18);
+
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   SECONDARY MODAL BUTTON
+   ============================================================ */
+
+.ai-revenue-modal-secondary-button {
+  width: 100%;
+
+  min-height: 44px;
+
+  margin-top: 10px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 10px;
+
+  background: var(--bg-surface);
+
+  color: var(--text-primary);
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.ai-revenue-modal-secondary-button:hover {
+  background: var(--bg-muted);
+
+  border-color: var(--text-secondary);
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .ai-order-link {
+    padding: 6px 8px;
+
+    font-size: 10px;
+  }
+}

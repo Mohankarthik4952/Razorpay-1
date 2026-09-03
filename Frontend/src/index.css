@@ -1,0 +1,544 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+  color: #172033;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.header {
+  background: #111827;
+  color: white;
+  padding: 25px 60px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.header p {
+  margin: 7px 0 0;
+  color: #cbd5e1;
+}
+
+.cart-summary {
+  text-align: right;
+  font-weight: bold;
+  line-height: 1.8;
+}
+
+/* ============================================================
+   CONTAINER
+   ============================================================ */
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 45px 25px;
+}
+
+.page-title {
+  margin-bottom: 30px;
+}
+
+.page-title h2 {
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+.page-title p {
+  color: #64748b;
+}
+
+/* ============================================================
+   PRODUCT GRID
+   ============================================================ */
+
+.product-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 22px;
+}
+
+/* ============================================================
+   PRODUCT CARD
+   ============================================================ */
+
+.product-card {
+  background: white;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* ============================================================
+   PRODUCT IMAGE
+   ============================================================ */
+
+.product-image {
+  width: 100%;
+
+  height: 210px;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+/* ============================================================
+   PRODUCT CONTENT
+   ============================================================ */
+
+.product-content {
+  padding: 20px;
+}
+
+.category {
+  font-size: 12px;
+
+  font-weight: bold;
+
+  color: #2563eb;
+
+  text-transform: uppercase;
+}
+
+.product-content h3 {
+  font-size: 18px;
+
+  margin: 8px 0;
+}
+
+.brand {
+  color: #64748b;
+
+  margin: 5px 0;
+}
+
+.product-content h4 {
+  font-size: 20px;
+
+  margin: 15px 0;
+}
+
+/* ============================================================
+   PRODUCT BUTTONS
+   ============================================================ */
+
+.product-actions {
+  display: flex;
+
+  gap: 8px;
+}
+
+.product-actions button {
+  flex: 1;
+
+  padding: 11px 8px;
+
+  border-radius: 7px;
+
+  background: #2563eb;
+
+  color: white;
+}
+
+.product-actions .buy-button {
+  background: #111827;
+}
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.loading {
+  margin-top: 25px;
+
+  padding: 18px;
+
+  background: #eff6ff;
+
+  color: #1d4ed8;
+
+  border-radius: 8px;
+
+  text-align: center;
+
+  font-weight: bold;
+}
+
+/* ============================================================
+   SUCCESS / ERROR
+   ============================================================ */
+
+.success {
+  margin-top: 25px;
+
+  padding: 15px;
+
+  background: #dcfce7;
+
+  color: #166534;
+
+  border-radius: 8px;
+}
+
+.error {
+  margin-top: 25px;
+
+  padding: 15px;
+
+  background: #fee2e2;
+
+  color: #991b1b;
+
+  border-radius: 8px;
+}
+
+/* ============================================================
+   AI CARD
+   ============================================================ */
+
+.ai-card {
+  margin-top: 35px;
+
+  background: white;
+
+  border-radius: 14px;
+
+  padding: 30px;
+
+  border-left: 5px solid #2563eb;
+
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.ai-title {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+}
+
+.ai-icon {
+  font-size: 32px;
+}
+
+.ai-title h2 {
+  margin: 0;
+}
+
+.ai-title p {
+  color: #64748b;
+}
+
+/* ============================================================
+   SELECTED PRODUCT
+   ============================================================ */
+
+.selected-product {
+  margin-top: 20px;
+
+  padding: 12px;
+
+  background: #f8fafc;
+
+  border-radius: 7px;
+}
+
+/* ============================================================
+   AI SUGGESTION
+   ============================================================ */
+
+.suggestion {
+  margin-top: 20px;
+
+  padding: 25px;
+
+  background: #f8fafc;
+
+  border-radius: 10px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+}
+
+.recommended-label {
+  font-size: 11px;
+
+  font-weight: bold;
+
+  color: #2563eb;
+}
+
+.suggestion h3 {
+  font-size: 22px;
+
+  margin: 8px 0;
+}
+
+.suggestion p {
+  color: #475569;
+}
+
+/* ============================================================
+   AI ACTIONS
+   ============================================================ */
+
+.ai-actions {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  min-width: 220px;
+}
+
+.ai-actions button {
+  padding: 12px 18px;
+
+  border-radius: 7px;
+
+  background: #2563eb;
+
+  color: white;
+}
+
+.ai-actions .reject-button {
+  background: #64748b;
+}
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+.approved {
+  padding: 12px;
+
+  background: #dcfce7;
+
+  color: #166534;
+
+  border-radius: 7px;
+
+  font-weight: bold;
+}
+
+.rejected {
+  padding: 12px;
+
+  background: #f1f5f9;
+
+  color: #475569;
+
+  border-radius: 7px;
+}
+
+.no-recommendation {
+  margin-top: 20px;
+
+  padding: 20px;
+
+  background: #f8fafc;
+
+  border-radius: 8px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1000px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 650px) {
+  .header {
+    padding: 20px;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+  .cart-summary {
+    text-align: left;
+  }
+
+  .suggestion {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .ai-actions {
+    width: 100%;
+  }
+}
+/* ============================================================
+   CHECKOUT
+   ============================================================ */
+
+.checkout-button {
+  margin-top: 8px;
+
+  padding: 9px 16px;
+
+  border-radius: 7px;
+
+  background: white;
+
+  color: #111827;
+}
+
+.checkout-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.checkout-card {
+  margin-top: 35px;
+
+  background: white;
+
+  border-radius: 14px;
+
+  padding: 30px;
+
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.checkout-items {
+  margin-top: 25px;
+}
+
+.checkout-item {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 18px 0;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.checkout-item p {
+  margin: 5px 0;
+
+  color: #64748b;
+}
+
+.ai-badge {
+  display: inline-block;
+
+  margin-top: 5px;
+
+  padding: 4px 8px;
+
+  border-radius: 5px;
+
+  background: #eff6ff;
+
+  color: #2563eb;
+
+  font-size: 11px;
+
+  font-weight: bold;
+}
+
+.revenue-breakdown {
+  margin-top: 25px;
+
+  padding: 20px;
+
+  background: #f8fafc;
+
+  border-radius: 10px;
+}
+
+.revenue-breakdown > div {
+  display: flex;
+
+  justify-content: space-between;
+
+  padding: 8px 0;
+}
+
+.checkout-total {
+  font-size: 20px;
+
+  padding-top: 15px !important;
+}
+
+.payment-button {
+  width: 100%;
+
+  margin-top: 25px;
+
+  padding: 15px;
+
+  border-radius: 8px;
+
+  background: #111827;
+
+  color: white;
+
+  font-size: 17px;
+}
