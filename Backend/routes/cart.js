@@ -1153,6 +1153,387 @@ router.delete("/clear/:customerId", async (req, res, next) => {
 });
 
 // ============================================================
+// SYNC LOCAL CART
+//
+// POST /api/cart/sync
+//
+// Used when the frontend has cart items in localStorage
+// but PostgreSQL does not contain those items.
+//
+// Body:
+//
+// {
+//   "customer_id": 17,
+//   "items": [
+//     {
+//       "product_id": 5,
+//       "quantity": 1,
+//       "is_ai_recommended": true,
+//       "recommendation_id": 123
+//     }
+//   ]
+// }
+//
+// ============================================================
+
+router.post("/sync", async (req, res, next) => {
+  const client = await pool.connect();
+
+  try {
+    const customerId = Number(req.body?.customer_id);
+
+    const items = Array.isArray(req.body?.items) ? req.body.items : [];
+
+    // ----------------------------------------------------------
+    // CUSTOMER
+    // ----------------------------------------------------------
+
+    if (!isValidId(customerId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid customer ID.",
+      });
+    }
+
+    // ----------------------------------------------------------
+    // ITEMS
+    // ----------------------------------------------------------
+
+    if (items.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Cart items are required.",
+      });
+    }
+
+    await client.query("BEGIN");
+
+    // ----------------------------------------------------------
+    // CUSTOMER EXISTS
+    // ----------------------------------------------------------
+
+    const customer = await customerExists(client, customerId);
+
+    if (!customer) {
+      await client.query("ROLLBACK");
+
+      return res.status(404).json({
+        success: false,
+        message: "Customer not found.",
+      });
+    }
+
+    // ----------------------------------------------------------
+    // ACTIVE CART
+    // ----------------------------------------------------------
+
+    const cart = await getOrCreateActiveCart(client, customerId);
+
+    // ----------------------------------------------------------
+    // PROCESS EVERY LOCAL ITEM
+    // ----------------------------------------------------------
+
+    for (const localItem of items) {
+      const productId = Number(
+        localItem?.product_id ?? localItem?.productId ?? localItem?.id ?? 0,
+      );
+
+      const quantity = Number(localItem?.quantity || 1);
+
+      if (!isValidId(productId)) {
+        await client.query("ROLLBACK");
+
+        return res.status(400).json({
+          success: false,
+          message: "Invalid product ID in cart.",
+        });
+      }
+
+      if (!Number.isInteger(quantity) || quantity <= 0) {
+        await client.query("ROLLBACK");
+
+        return res.status(400).json({
+          success: false,
+          message: `Invalid quantity for product ${productId}.`,
+        });
+      }
+
+      // --------------------------------------------------------
+      // PRODUCT
+      //
+      // IMPORTANT:
+      // Never trust the frontend price.
+      // Always use the PostgreSQL product price.
+      // --------------------------------------------------------
+
+      const productResult = await client.query(
+        `
+          SELECT
+            product_id,
+            name,
+            price,
+            stock,
+            status
+
+          FROM products
+
+          WHERE product_id = $1
+
+          LIMIT 1
+
+          FOR UPDATE
+        `,
+        [productId],
+      );
+
+      if (productResult.rows.length === 0) {
+        await client.query("ROLLBACK");
+
+        return res.status(404).json({
+          success: false,
+          message: `Product ${productId} was not found.`,
+        });
+      }
+
+      const product = productResult.rows[0];
+
+      // --------------------------------------------------------
+      // PRODUCT STATUS
+      // --------------------------------------------------------
+
+      const productStatus = String(product.status || "ACTIVE")
+        .trim()
+        .toLowerCase();
+
+      if (productStatus !== "active") {
+        await client.query("ROLLBACK");
+
+        return res.status(400).json({
+          success: false,
+          message: `${product.name} is currently unavailable.`,
+        });
+      }
+
+      // --------------------------------------------------------
+      // STOCK
+      // --------------------------------------------------------
+
+      const stock = Number(product.stock || 0);
+
+      if (stock <= 0) {
+        await client.query("ROLLBACK");
+
+        return res.status(400).json({
+          success: false,
+          message: `${product.name} is out of stock.`,
+        });
+      }
+
+      if (quantity > stock) {
+        await client.query("ROLLBACK");
+
+        return res.status(400).json({
+          success: false,
+          message: `Only ${stock} units of ${product.name} are available.`,
+        });
+      }
+
+      // --------------------------------------------------------
+      // AI INFORMATION
+      // --------------------------------------------------------
+
+      const requestedAI = localItem?.is_ai_recommended === true;
+
+      let isAIRecommended = false;
+
+      let recommendationId = null;
+
+      if (requestedAI && isValidId(localItem?.recommendation_id)) {
+        const recommendationResult = await client.query(
+          `
+            SELECT
+              recommendation_id,
+              customer_id,
+              recommended_product_id
+
+            FROM recommendations
+
+            WHERE recommendation_id = $1
+
+              AND customer_id = $2
+
+              AND recommended_product_id = $3
+
+            LIMIT 1
+          `,
+          [Number(localItem.recommendation_id), customerId, productId],
+        );
+
+        if (recommendationResult.rows.length > 0) {
+          isAIRecommended = true;
+
+          recommendationId = Number(
+            recommendationResult.rows[0].recommendation_id,
+          );
+        }
+      }
+
+      // --------------------------------------------------------
+      // EXISTING CART ITEM
+      // --------------------------------------------------------
+
+      const existingResult = await client.query(
+        `
+          SELECT
+            cart_item_id,
+            quantity,
+            is_ai_recommended,
+            recommendation_id
+
+          FROM cart_items
+
+          WHERE cart_id = $1
+
+            AND product_id = $2
+
+          LIMIT 1
+
+          FOR UPDATE
+        `,
+        [cart.cart_id, productId],
+      );
+
+      if (existingResult.rows.length > 0) {
+        const existing = existingResult.rows[0];
+
+        // Preserve an already verified AI recommendation.
+        if (
+          !isAIRecommended &&
+          existing.is_ai_recommended === true &&
+          isValidId(existing.recommendation_id)
+        ) {
+          isAIRecommended = true;
+
+          recommendationId = Number(existing.recommendation_id);
+        }
+
+        await client.query(
+          `
+            UPDATE cart_items
+
+            SET
+              quantity = $1,
+              unit_price = $2,
+              is_ai_recommended = $3,
+              recommendation_id = $4
+
+            WHERE cart_item_id = $5
+          `,
+          [
+            quantity,
+            product.price,
+            isAIRecommended,
+            recommendationId,
+            existing.cart_item_id,
+          ],
+        );
+      } else {
+        // ------------------------------------------------------
+        // INSERT
+        // ------------------------------------------------------
+
+        await client.query(
+          `
+            INSERT INTO cart_items
+            (
+              cart_id,
+              product_id,
+              quantity,
+              unit_price,
+              is_ai_recommended,
+              recommendation_id
+            )
+
+            VALUES
+            (
+              $1,
+              $2,
+              $3,
+              $4,
+              $5,
+              $6
+            )
+          `,
+          [
+            cart.cart_id,
+            productId,
+            quantity,
+            product.price,
+            isAIRecommended,
+            recommendationId,
+          ],
+        );
+      }
+    }
+
+    // ----------------------------------------------------------
+    // UPDATE CART
+    // ----------------------------------------------------------
+
+    await client.query(
+      `
+        UPDATE carts
+
+        SET
+          status = 'ACTIVE',
+          updated_at = CURRENT_TIMESTAMP
+
+        WHERE cart_id = $1
+      `,
+      [cart.cart_id],
+    );
+
+    // ----------------------------------------------------------
+    // GET FINAL SERVER CART
+    // ----------------------------------------------------------
+
+    const syncedCart = await getCartDetails(client, customerId);
+
+    // ----------------------------------------------------------
+    // COMMIT
+    // ----------------------------------------------------------
+
+    await client.query("COMMIT");
+
+    console.log("==========================================");
+    console.log("LOCAL CART SYNCHRONIZED");
+    console.log("Customer:", customerId);
+    console.log("Cart:", cart.cart_id);
+    console.log("Items:", syncedCart?.summary?.item_count || 0);
+    console.log("Total:", syncedCart?.summary?.total || 0);
+    console.log("==========================================");
+
+    return res.status(200).json({
+      success: true,
+
+      message: "Cart synchronized successfully.",
+
+      cart: syncedCart,
+    });
+  } catch (error) {
+    try {
+      await client.query("ROLLBACK");
+    } catch {}
+
+    console.error("SYNC CART ERROR:", error);
+
+    next(error);
+  } finally {
+    client.release();
+  }
+});
+
+// ============================================================
 // VALIDATE CART BEFORE CHECKOUT
 //
 // POST /api/cart/validate

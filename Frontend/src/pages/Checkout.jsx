@@ -621,6 +621,100 @@ function Checkout() {
   }
 
   // ==========================================================
+  // SYNC LOCAL CART TO BACKEND
+  // ==========================================================
+  //
+  // Used when Checkout is using the localStorage fallback.
+  //
+  // The backend remains the source of truth for:
+  // - Product price
+  // - Stock
+  // - Order creation
+  // - Payment
+  // - AI attribution
+  //
+  // ==========================================================
+
+  async function syncLocalCartToBackend(currentCustomerId) {
+    if (!currentCustomerId) {
+      throw new Error("Customer account not found.");
+    }
+
+    if (!Array.isArray(cart) || cart.length === 0) {
+      throw new Error("Your cart is empty.");
+    }
+
+    console.log("======================================");
+    console.log("SYNC LOCAL CART TO BACKEND");
+    console.log("customer_id:", currentCustomerId);
+    console.log("local cart:", cart);
+    console.log("======================================");
+
+    const items = cart.map((item) => ({
+      product_id: getProductId(item),
+
+      quantity: Number(item.quantity || 1),
+
+      is_ai_recommended: item.is_ai_recommended === true,
+
+      recommendation_id: item.recommendation_id
+        ? Number(item.recommendation_id)
+        : null,
+    }));
+
+    const response = await fetch(`${API_URL}/api/cart/sync`, {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        customer_id: currentCustomerId,
+
+        items,
+      }),
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    console.log("Cart sync response:", data);
+
+    if (!response.ok || data?.success === false) {
+      throw new Error(
+        data?.message ||
+          `Unable to synchronize cart. Status ${response.status}.`,
+      );
+    }
+
+    const syncedItems = normalizeBackendCart({
+      items: data?.cart?.items || [],
+    });
+
+    if (syncedItems.length === 0) {
+      throw new Error(
+        "Cart synchronization completed, but the backend cart is empty.",
+      );
+    }
+
+    // ----------------------------------------------------------
+    // Replace local cart with verified server cart
+    // ----------------------------------------------------------
+
+    setCart(syncedItems);
+
+    try {
+      localStorage.setItem("cart", JSON.stringify(syncedItems));
+    } catch {
+      // Ignore localStorage errors
+    }
+
+    console.log("✅ Local cart synchronized with PostgreSQL.");
+
+    return syncedItems;
+  }
+
+  // ==========================================================
   // SAVE ORDER
   // ==========================================================
 
@@ -671,6 +765,16 @@ function Checkout() {
       try {
         setProcessing(true);
         setError("");
+
+        // ======================================================
+        // SYNC LOCAL CART FIRST
+        // ======================================================
+
+        await syncLocalCartToBackend(currentCustomerId);
+
+        // ======================================================
+        // CREATE COD ORDER
+        // ======================================================
 
         const response = await fetch(`${API_URL}/api/payment/cod`, {
           method: "POST",
@@ -788,6 +892,11 @@ function Checkout() {
       // using customer_id.
       //
       // ======================================================
+      // ======================================================
+      // SYNC LOCAL CART FIRST
+      // ======================================================
+
+      await syncLocalCartToBackend(currentCustomerId);
 
       const payload = {
         customer_id: currentCustomerId,
