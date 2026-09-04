@@ -1513,7 +1513,7 @@ router.post("/cod", async (req, res) => {
     // ======================================================
 
     try {
-      await sendOrderConfirmationEmail({
+      sendOrderConfirmationEmail({
         customer,
 
         order,
